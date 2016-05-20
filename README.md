@@ -5,4 +5,4 @@ Small experiment to see the capabilities of elm-lang and Fable for generative ar
 This art is small hack inspired by https://github.com/mattdesl/color-wander
 
 
-<img src="https://raw.githubusercontent.com/Indy9000/noodle-soup/master/screenshot-01.png" align="left" height="320" width="240" >
+<img src="https://raw.githubusercontent.com/Indy9000/noodle-soup/master/screenshot-01.png" align="left" width="320" height="240" >
