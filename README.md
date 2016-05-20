@@ -1,7 +1,8 @@
 # noodle-soup
 Generative Art with F# Fable, and elm-lang
 
-Small experiment to see the capabilities of elm-lang and Fable for generative art and artificial life simulations
+Small experiment to see the capabilities of elm-lang and Fable for generative art and artificial life simulations.
+
 This art is small hack inspired by https://github.com/mattdesl/color-wander
 
 
