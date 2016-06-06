@@ -1,0 +1,212 @@
+var _user$project$Main$draw = function (el) {
+	var r_ = _elm_lang$core$Basics$toString(el.brushSize);
+	var cy_ = _elm_lang$core$Basics$toString(el.y);
+	var cx_ = _elm_lang$core$Basics$toString(el.x);
+	return A2(
+		_elm_lang$svg$Svg$circle,
+		_elm_lang$core$Native_List.fromArray(
+			[
+				_elm_lang$svg$Svg_Attributes$cx(cx_),
+				_elm_lang$svg$Svg_Attributes$cy(cy_),
+				_elm_lang$svg$Svg_Attributes$r(r_),
+				_elm_lang$svg$Svg_Attributes$fill(el.color)
+			]),
+		_elm_lang$core$Native_List.fromArray(
+			[]));
+};
+var _user$project$Main$view = function (model) {
+	var particles = A2(_elm_lang$core$List$map, _user$project$Main$draw, model.particles);
+	var history = A2(_elm_lang$core$List$map, _user$project$Main$draw, model.history);
+	return A2(
+		_elm_lang$svg$Svg$svg,
+		_elm_lang$core$Native_List.fromArray(
+			[
+				_elm_lang$svg$Svg_Attributes$viewBox('0 0 640 480'),
+				_elm_lang$svg$Svg_Attributes$width('640px')
+			]),
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			_elm_lang$core$Native_List.fromArray(
+				[
+					A2(
+					_elm_lang$svg$Svg$rect,
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$svg$Svg_Attributes$x('0'),
+							_elm_lang$svg$Svg_Attributes$y('0'),
+							_elm_lang$svg$Svg_Attributes$width('640'),
+							_elm_lang$svg$Svg_Attributes$height('480'),
+							_elm_lang$svg$Svg_Attributes$fill('#69D2E7')
+						]),
+					_elm_lang$core$Native_List.fromArray(
+						[]))
+				]),
+			A2(_elm_lang$core$Basics_ops['++'], history, particles)));
+};
+var _user$project$Main$colors = _elm_lang$core$Array$fromList(
+	_elm_lang$core$Native_List.fromArray(
+		['#69D2E7', '#A7DBD8', '#E0E4CC', '#F38630', '#FA6900']));
+var _user$project$Main$maxBrushSize = 30.0;
+var _user$project$Main$updateParticle = F4(
+	function (el, v, t, bs) {
+		var bs = (_elm_lang$core$Native_Utils.cmp(el.brushSize + bs, _user$project$Main$maxBrushSize) > 0) ? (0 - bs) : ((_elm_lang$core$Native_Utils.cmp(el.brushSize + bs, 0) < 0) ? (0 - bs) : bs);
+		var _p0 = _elm_lang$core$Basics$fromPolar(
+			{ctor: '_Tuple2', _0: el.v, _1: el.theta});
+		var xx = _p0._0;
+		var yy = _p0._1;
+		return _elm_lang$core$Native_Utils.update(
+			el,
+			{theta: el.theta + t, x: el.x + xx, y: el.y + yy, brushSize: el.brushSize + bs});
+	});
+var _user$project$Main$updateModel = F2(
+	function (timeTick, model) {
+		var history_ = _elm_lang$core$Native_List.fromArray(
+			[]);
+		var count = _elm_lang$core$List$length(model.particles);
+		var _p1 = A2(
+			_elm_lang$core$Random$step,
+			A2(
+				_elm_lang$core$Random$list,
+				count,
+				A2(_elm_lang$core$Random$float, -0.1, 0.1)),
+			model.seed);
+		var v = _p1._0;
+		var s1 = _p1._1;
+		var _p2 = A2(
+			_elm_lang$core$Random$step,
+			A2(
+				_elm_lang$core$Random$list,
+				count,
+				A2(_elm_lang$core$Random$float, 0 - (_elm_lang$core$Basics$pi / 8), _elm_lang$core$Basics$pi / 8)),
+			s1);
+		var t = _p2._0;
+		var s2 = _p2._1;
+		var _p3 = A2(
+			_elm_lang$core$Random$step,
+			A2(
+				_elm_lang$core$Random$list,
+				count,
+				A2(_elm_lang$core$Random$float, -0.1, 0.1)),
+			s2);
+		var bs = _p3._0;
+		var s3 = _p3._1;
+		var particles_ = A5(_elm_lang$core$List$map4, _user$project$Main$updateParticle, model.particles, v, t, bs);
+		return {
+			ctor: '_Tuple2',
+			_0: _elm_lang$core$Native_Utils.update(
+				model,
+				{time: timeTick, seed: s3, particles: particles_, history: history_}),
+			_1: _elm_lang$core$Platform_Cmd$none
+		};
+	});
+var _user$project$Main$update = F2(
+	function (action, model) {
+		var _p4 = action;
+		return A2(_user$project$Main$updateModel, _p4._0, model);
+	});
+var _user$project$Main$particleCount = 500;
+var _user$project$Main$historyLength = _user$project$Main$particleCount * 10;
+var _user$project$Main$manageHistory = F2(
+	function (history, particles) {
+		var count = 5;
+		var hlen = _elm_lang$core$List$length(history);
+		var pruned = (_elm_lang$core$Native_Utils.cmp(hlen, _user$project$Main$historyLength) > -1) ? A2(_elm_lang$core$List$drop, count, history) : history;
+		return A2(_elm_lang$core$Basics_ops['++'], pruned, particles);
+	});
+var _user$project$Main$_p5 = {ctor: '_Tuple2', _0: 300.0, _1: 200.0};
+var _user$project$Main$halfWidth = _user$project$Main$_p5._0;
+var _user$project$Main$halfHeight = _user$project$Main$_p5._1;
+var _user$project$Main$initParticle = F4(
+	function (t, v, b, c) {
+		var cc = A2(_elm_lang$core$Array$get, c, _user$project$Main$colors);
+		var col = function () {
+			var _p6 = cc;
+			if (_p6.ctor === 'Just') {
+				return _p6._0;
+			} else {
+				return '#000000';
+			}
+		}();
+		return {x: _user$project$Main$halfWidth, y: _user$project$Main$halfHeight, v: v, theta: t, brushSize: b, color: col};
+	});
+var _user$project$Main$initParticles = F2(
+	function (count, seed) {
+		var _p7 = A2(
+			_elm_lang$core$Random$step,
+			A2(
+				_elm_lang$core$Random$list,
+				count,
+				A2(_elm_lang$core$Random$float, 0, 2 * _elm_lang$core$Basics$pi)),
+			seed);
+		var t = _p7._0;
+		var s1 = _p7._1;
+		var _p8 = A2(
+			_elm_lang$core$Random$step,
+			A2(
+				_elm_lang$core$Random$list,
+				count,
+				A2(_elm_lang$core$Random$float, 1, 2)),
+			s1);
+		var v = _p8._0;
+		var s2 = _p8._1;
+		var _p9 = A2(
+			_elm_lang$core$Random$step,
+			A2(
+				_elm_lang$core$Random$list,
+				count,
+				A2(_elm_lang$core$Random$float, 1.0e-2, 0.3)),
+			s2);
+		var b = _p9._0;
+		var s3 = _p9._1;
+		var _p10 = A2(
+			_elm_lang$core$Random$step,
+			A2(
+				_elm_lang$core$Random$list,
+				count,
+				A2(_elm_lang$core$Random$int, 1, 5)),
+			s3);
+		var c = _p10._0;
+		var s4 = _p10._1;
+		return {
+			ctor: '_Tuple2',
+			_0: A5(_elm_lang$core$List$map4, _user$project$Main$initParticle, t, v, b, c),
+			_1: s4
+		};
+	});
+var _user$project$Main$init = function () {
+	var _p11 = A2(
+		_user$project$Main$initParticles,
+		_user$project$Main$particleCount,
+		_elm_lang$core$Random$initialSeed(42));
+	var els = _p11._0;
+	var s1 = _p11._1;
+	var model = {
+		time: 0.0,
+		seed: s1,
+		particles: els,
+		history: _elm_lang$core$Native_List.fromArray(
+			[])
+	};
+	return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+}();
+var _user$project$Main$_p12 = {ctor: '_Tuple2', _0: 600.0, _1: 400.0};
+var _user$project$Main$simWidth = _user$project$Main$_p12._0;
+var _user$project$Main$simHeight = _user$project$Main$_p12._1;
+var _user$project$Main$Particle = F6(
+	function (a, b, c, d, e, f) {
+		return {x: a, y: b, v: c, theta: d, brushSize: e, color: f};
+	});
+var _user$project$Main$Model = F4(
+	function (a, b, c, d) {
+		return {time: a, seed: b, particles: c, history: d};
+	});
+var _user$project$Main$Tick = function (a) {
+	return {ctor: 'Tick', _0: a};
+};
+var _user$project$Main$subscriptions = function (model) {
+	return A2(_elm_lang$core$Time$every, _elm_lang$core$Time$millisecond * 50, _user$project$Main$Tick);
+};
+var _user$project$Main$main = {
+	main: _elm_lang$html$Html_App$program(
+		{init: _user$project$Main$init, view: _user$project$Main$view, update: _user$project$Main$update, subscriptions: _user$project$Main$subscriptions})
+};
