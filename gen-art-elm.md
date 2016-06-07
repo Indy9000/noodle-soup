@@ -128,9 +128,10 @@ Click the button below to run the code.
 
 
 <div>
-<script type="text/javascript" src="../../noodle-soup/gen-art.js"></script>
+<script type="text/javascript" src="../scripts/gen-art-elm/gen-art.js"></script>
 <div id='fhf'></div>
-<button onclick="Elm.Main.embed(fhf)">Run</button>
+<script>Elm.Main.embed(fhf);</script>
+<button onclick="location.reload();">Reload</button>
 </div>
 
 
